@@ -1,0 +1,28 @@
+# =============================================================================
+# Smoke protocol: inherits configs/project.yaml and shrinks everything so a
+# full check -> train -> val -> benchmark -> plot cycle finishes in minutes.
+#
+# A smoke run is NEVER evidence of model quality: every artefact is tagged
+# `scope: smoke`, and `report.py` refuses to build a formal report from it.
+# =============================================================================
+extends: project.yaml
+
+scope: smoke
+
+data:
+  view_mode: copy
+  smoke_train_images: 20       # fixed, deterministic subset of the audited train split
+  smoke_val_images: 10
+
+train:
+  epochs: 2
+  batch: 2
+  workers: 0
+  close_mosaic: 0
+  plots: true
+
+eval:
+  batch: 1
+
+figures:
+  tag: smoke

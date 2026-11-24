@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "uavdet"
+version = "0.1.0"
+description = "VisDrone UAV small-object detection: data audit, YOLO11s training/evaluation, SCI-style report figures and a PyQt6 desktop app"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Course project, non-commercial" }
+authors = [{ name = "AI 3003 course project" }]
+keywords = ["visdrone", "yolo11", "object-detection", "uav"]
+# Core = everything the CLI needs to audit data, plot saved results and run
+# the experiment bookkeeping without Qt. torch / ultralytics are part of core
+# because training, evaluation, benchmarks and the detection engine need them.
+dependencies = [
+    "numpy>=1.23,<2.0",
+    "pandas>=1.5",
+    "matplotlib>=3.6",
+    "Pillow>=9.0",
+    "PyYAML>=6.0",
+    "scipy>=1.9",
+    "torch>=2.0",
+    "torchvision>=0.15",
+    "ultralytics>=8.3.0",
+    "opencv-python>=4.6",
+]
+
+[project.optional-dependencies]
+gui = ["PyQt6>=6.5"]
+
+[project.scripts]
+uavdet = "uavdet.cli:main"
+uavdet-app = "uavdet.app.main:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"uavdet.plotting" = ["assets/*.mplstyle"]
+"uavdet.app" = ["*.qss", "pages/*.qss"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

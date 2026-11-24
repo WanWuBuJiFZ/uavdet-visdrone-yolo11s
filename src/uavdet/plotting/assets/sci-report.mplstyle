@@ -1,0 +1,44 @@
+# SCI-style report figure style for uavdet.
+# Copied from references/legacy_code/docs/figure_styles/sci-skills.mplstyle
+# (approved course-project figure style), extended with fixed sizes so the
+# rendered text stays 8-10 pt at the final report width.
+figure.facecolor: white
+axes.facecolor: white
+axes.edgecolor: 0.20
+axes.labelcolor: 0.12
+axes.linewidth: 0.8
+axes.spines.top: False
+axes.spines.right: False
+axes.grid: False
+axes.titlesize: 10
+axes.titleweight: semibold
+axes.labelsize: 9
+axes.titlepad: 8
+axes.labelpad: 6
+font.family: sans-serif
+font.sans-serif: Arial, DejaVu Sans, Noto Sans CJK SC
+font.size: 9
+xtick.labelsize: 8
+ytick.labelsize: 8
+xtick.color: 0.15
+ytick.color: 0.15
+xtick.major.width: 0.7
+ytick.major.width: 0.7
+xtick.major.size: 3
+ytick.major.size: 3
+legend.fontsize: 8
+legend.frameon: False
+legend.handlelength: 2.6
+legend.columnspacing: 1.6
+legend.labelspacing: 0.5
+lines.linewidth: 1.8
+lines.markersize: 4.5
+errorbar.capsize: 2.5
+image.cmap: viridis
+savefig.dpi: 300
+savefig.bbox: tight
+savefig.pad_inches: 0.04
+svg.fonttype: none
+pdf.fonttype: 42
+figure.figsize: 7.0, 4.2
+figure.dpi: 120

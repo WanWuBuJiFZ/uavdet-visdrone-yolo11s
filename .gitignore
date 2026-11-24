@@ -1,0 +1,39 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --- runtime products (never source) ---
+# 注意：正式结果_看图/ 是有意纳入仓库的结果图集（约 13 MB），不要忽略
+
+outputs/
+workspace/
+app_data/
+runs/
+
+# --- model weights: large binaries, never committed ---
+weights/*.pt
+weights/*.onnx
+weights/*.engine
+*.pt
+*.pth
+*.onnx
+*.engine
+
+# --- the shipped dataset copy is source material, not repository content ---
+dataset_visdrone/VisDrone2019-DET-*/
+dataset_visdrone/*.zip
+
+# --- OS / editor noise ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log

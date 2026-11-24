@@ -1,0 +1,25 @@
+# Core dependencies for uavdet — data audit, training, evaluation, benchmark,
+# figures and the headless CLI. Qt is NOT included here.
+#
+# Verified combination (2026-11-17, macOS 14 arm64, CPU):
+#   Python 3.11.3 · torch 2.0.1 · torchvision 0.15.2 · ultralytics 8.4.215
+#   numpy 1.26.4 · pandas 1.5.3 · matplotlib 3.7.1 · Pillow 13.0.0
+#   scipy 1.10.1 · opencv-python 4.10.0.84 · PyYAML 6.0 · PyQt6 6.12.1
+#
+# For an exact reproduction of the verified versions use requirements-verified.txt.
+#
+# torch / torchvision are intentionally NOT pinned here: the correct wheel depends
+# on the target platform and CUDA version. Install them FIRST (see README or
+# docs/CLOUD_RUN.md), then run `pip install -r requirements-core.txt`. Ultralytics
+# will keep an existing torch that satisfies >=1.8.
+#
+# numpy is pinned below 2.0 on purpose: the verified scipy/matplotlib combination
+# in this environment is numpy-1.x, and torch 2.0.x was built against numpy 1.x.
+numpy>=1.23,<2.0
+pandas>=1.5
+matplotlib>=3.6
+Pillow>=9.0
+PyYAML>=6.0
+scipy>=1.9
+opencv-python==4.10.0.84
+ultralytics==8.4.215

@@ -1,0 +1,26 @@
+# Exact versions this project was built and verified against
+# (2026-11-17, macOS 27.0.1 arm64 / Apple M4, CPU only).
+#
+# Environment caveat, stated honestly: the local venv was created with
+# `python3 -m venv --system-site-packages .venv` on top of an Anaconda Python
+# 3.11.3, so torch/pandas/matplotlib/Pillow/scipy came from the base env while
+# torchvision/ultralytics/numpy/opencv/PyQt6 were installed into the venv.
+# A clean venv can reproduce the stack by installing torch/torchvision for the
+# target platform FIRST, then this file:
+#
+#   python3 -m venv .venv && . .venv/bin/activate
+#   pip install torch==2.0.1 torchvision==0.15.2        # or the CUDA build for your GPU
+#   pip install -r requirements-verified.txt
+#
+# No GPU/CUDA combination has been verified by this project.
+torch==2.0.1
+torchvision==0.15.2
+ultralytics==8.4.215
+numpy==1.26.4
+pandas==1.5.3
+matplotlib==3.7.1
+Pillow==13.0.0
+opencv-python==4.10.0.84
+PyYAML==6.0
+scipy==1.10.1
+PyQt6==6.12.1

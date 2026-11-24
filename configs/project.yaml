@@ -1,0 +1,141 @@
+# =============================================================================
+# Formal protocol for the VisDrone2019-DET YOLO11s experiment.
+#
+# Paths: `project.root` is relative to *this file*; every other relative path is
+# resolved against the resolved `project.root` (never against the current shell
+# directory). Command line overrides beat the file.
+#
+# Do not edit values silently before a formal run: the resolved config is
+# written into the run directory and a changed training protocol forces a new
+# run (see README "experiment rules").
+# =============================================================================
+scope: formal
+
+project:
+  name: uavdet-visdrone-yolo11s
+  root: ..                      # -> Project/uav_detection_rebuild
+  output_root: outputs          # runs, weights, metrics, figures
+  workspace_root: workspace     # writable dataset views + caches
+  app_data_root: app_data       # desktop settings and detection exports
+
+data:
+  root: dataset_visdrone        # read-only input copy shipped with the project
+  train_split: train
+  val_split: val
+  expected_train_images: 6471
+  expected_val_images: 548
+  verify_image_decode: true     # decode every image during the audit
+  view_mode: copy               # copy inputs into workspace/data_views/<digest>
+  # Label quality policy.
+  #   strict                -> ANY invalid label line blocks training.
+  #   drop_degenerate_boxes -> only zero-area (w or h = 0 pixel) boxes are
+  #                            dropped; each dropped line is written to
+  #                            audit/label_repairs.csv and applied ONLY to the
+  #                            generated workspace copy, never to the source.
+  #
+  # The shipped train split contains exactly ONE such line
+  # (VisDrone2019-DET-train/labels/9999985_00000_d_0000020.txt line 11,
+  #  "3 0.437857 0.150476 0.002857 0.000000", 0 px height) out of 381,963
+  # instances. A 0-pixel box is unusable for training, so the recorded repair is
+  # enabled here. Set this back to `strict` to re-check the raw data.
+  label_repair: drop_degenerate_boxes
+  class_names:
+    - pedestrian
+    - people
+    - bicycle
+    - car
+    - van
+    - truck
+    - tricycle
+    - awning-tricycle
+    - bus
+    - motor
+  smoke_train_images: 20
+  smoke_val_images: 10
+
+train:
+  init_weights: weights/yolo11s.pt
+  allow_trained_init: false     # refuse best.pt/last.pt as the COCO start point
+  epochs: 300
+  imgsz: 640
+  batch: 16
+  workers: 4
+  device: cpu                   # 0 for the first CUDA/MPS device
+  optimizer: SGD
+  lr0: 0.01
+  lrf: 0.01
+  momentum: 0.937
+  weight_decay: 0.0005
+  warmup_epochs: 3.0
+  cos_lr: false
+  seed: 0
+  deterministic: true
+  amp: true
+  mosaic: 1.0
+  close_mosaic: 10
+  hsv_h: 0.015
+  hsv_s: 0.7
+  hsv_v: 0.4
+  translate: 0.1
+  scale: 0.5
+  fliplr: 0.5
+  flipud: 0.0
+  mixup: 0.0
+  copy_paste: 0.0
+  multi_scale: false
+  patience: 0                   # 0 = early stopping off (verified per version)
+  plots: true
+  save_period: -1
+
+eval:
+  split: val
+  imgsz: 640
+  batch: 1
+  conf: 0.001                   # native mAP evaluation threshold, not the GUI one
+  iou: 0.70
+  # Data decision, measured before any formal run (same smoke run, 10 val images,
+  # conf=0.001): mAP50 = 0.126582 (300) / 0.127566 (500) / 0.128731 (1000) /
+  # 0.129476 (2000) / 0.129959 (3000) / 0.130398 (5000); inference time is flat
+  # (~56 ms) and P/R at the best-F1 point do not change. Truncation is therefore a
+  # real (small) cap on dense scenes, and 3000 is the point where the gain flattens
+  # (+0.00048 to 3000, +0.00044 from 3000 to 5000). Evaluation uses 3000; the
+  # application/GUI/benchmark speed setting stays at 300 (different purpose).
+  # `evaluation/metrics.json` records `max_det_hits` and warns if an image still
+  # reaches the limit. Note: predictions.jsonl grows with this value.
+  max_det: 3000
+  device: cpu
+  plots: true
+  case_conf: 0.25               # fixed-threshold case analysis
+  case_iou: 0.50
+  max_cases: 6
+  # Optional: image ids (stems) forced into the case panels, e.g.
+  # ["0000271_01401_d_0000380"]. Empty = automatic selection only.
+  case_images: []
+
+predict:
+  imgsz: 640
+  conf: 0.25
+  iou: 0.70
+  max_det: 300
+  device: cpu
+  half: false
+
+benchmark:
+  num_images: 100
+  warmup: 5
+  repeats: 3
+  batch: 1
+  half: false
+  seed: 0
+  imgsz: 640
+  conf: 0.25
+  iou: 0.70
+  max_det: 300
+  device: cpu
+
+figures:
+  dpi: 300
+  formats: [png, pdf, svg]
+  figure_width: 7.0             # inches, matches a two-column report figure
+  font_family: auto
+  tag: v1
